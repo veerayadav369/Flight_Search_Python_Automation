@@ -35,6 +35,8 @@ bash
 pip install -r requirements.txt
 Download the required browser driver automatically by WebDriver Manager.
 
+For Video referance :
+https://drive.google.com/drive/folders/16K5XRTBdtioZMU7FoMUMW0Ez2gD_07CI?usp=drive_link
 
 Run the script:
 
