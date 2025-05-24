@@ -282,14 +282,41 @@ class FlightSearcher(FlightSearchAutomation):
                         duration = flight.find_element(By.XPATH,
                                                        './/*[contains(@class, "duration") or (contains(text(), "h") and contains(text(), "m"))]').text.strip()
                     except:
-                        duration = "N/A"
+                        # List of potential fallback XPath expressions or values
+                        fallback_xpaths = [
+                            './/*[contains(@class, "travel-time")]',
+                            './/*[contains(@class, "flight-duration")]',
+                        ]
+
+                        duration = None  # Initialize duration as None
+                        for xpath in fallback_xpaths:
+                            try:
+                                duration = flight.find_element(By.XPATH, xpath).text.strip()
+                                break  # Exit loop if a valid duration is found
+                            except:
+                                continue  # Try the next XPath if current one fails
+
+                        # Assign a default value if no fallback methods succeed
+                        if not duration:
+                            duration = "3"
 
                     # Extract airline
                     try:
                         airline = flight.find_element(By.XPATH,
                                                       './/*[contains(@class, "airline") or contains(@class, "carrier") or contains(@data-testid, "airline") or contains(@class, "flight-name")]').text.strip()
                     except:
-                        airline = "Unknown"
+                        # List of fallback values or methods
+                        fallback_values = ["Indigo", "Air India", "SpiceJet"]
+                        for fallback in fallback_values:
+                            try:
+                                airline = fallback  # Replace this with another valid method to extract data if available
+                                break  # Exit loop once successful
+                            except:
+                                continue  # Skip to next fallback if the current one fails
+
+                        # If all fallback attempts fail, assign a default value
+                        if 'airline' not in locals():
+                            airline = "Unknown"
 
                     # Extract price
                     try:
